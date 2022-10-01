@@ -26,9 +26,9 @@ int main()
     sf::Text textcalc;
     sf::Text text;
     sf::Font font;
-    if (!font.loadFromFile("arial.ttf"))
+    if (!font.loadFromFile("Game Of Squids.ttf"))
     {
-        // error...
+     
     }
 
 
