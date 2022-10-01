@@ -1,133 +1,90 @@
-#include <iostream>
-#include <vector>     
-#include <complex> 
-#include <iomanip>
-#include <SFML/Graphics.hpp>
 #include "ComplexPlane.h"
-
-
-
-using namespace std;
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <thread>
 using namespace sf;
-
 int main()
 {
-    Defineset mandle(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
+	Event event;
+	VideoMode res(1920, 1080);
+	VideoMode monitor = res.getDesktopMode();
+	float monitorWidth = monitor.width;
+	float monitorHeight = monitor.height;
+	float ratio = monitorHeight / monitorWidth;
+	ComplexPlane c(ratio);
+	RenderWindow win(res, "Mandlebroooooooot", Style::Default);
 
+	Font font;
+	font.loadFromFile("./font/Game Of Squids.ttf");
+	Text textbox("test", font, 15);
+	textbox.setFillColor(sf::Color::White);
+	textbox.setOutlineColor(sf::Color::Black);
+	textbox.setScale(1, 1);
+	textbox.setStyle(sf::Text::Bold);
+	textbox.setPosition(0, 0);
 
-    // Create a window with the same pixel depth as the desktop
+	VertexArray vertices(Points, monitorHeight * monitorWidth);
+	enum CurrentState { CALCULATING, DISPLAYING };
+	CurrentState now = CALCULATING;
 
-    sf::RenderWindow window;
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window.create(sf::VideoMode(mandle.returnxpixels(), mandle.returnypixels()), "SFML window");
-    window.setFramerateLimit(60);
-    // run the program as long as the window is open
+	while (win.isOpen())
+	{
+		while (win.pollEvent(event))
+		{
+			if (event.key.code == Keyboard::Escape)
+			{
+				win.close();
+			}
+			if (event.type == Event::Closed) { win.close(); }
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				Vector2f clicked;
+				clicked = win.mapPixelToCoords(Mouse::getPosition(win), c.getView());
 
-    sf::Text textcalc;
-    sf::Text text;
-    sf::Font font;
-    if (!font.loadFromFile("Game Of Squids.ttf"))
-    {
-     
-    }
+				if (event.mouseButton.button == sf::Mouse::Left) { c.zoomIn(); }
+				if (event.mouseButton.button == sf::Mouse::Right) { c.zoomOut(); }
+				c.setCenter(clicked);
+				now = CALCULATING;
+			}
 
+			if (event.type == sf::Event::MouseMoved)
+			{
+				c.setMouseLocation(win.mapPixelToCoords(Mouse::getPosition(win), c.getView()));
+			}
+		}
+		if (now == CALCULATING)
+		{
+			const int NUM_OF_THREADS = 16;
 
-    auto &clock = sf::Clock();
+			//multithreading
+			int step = static_cast<int>(monitorWidth) / NUM_OF_THREADS;
+			thread t[NUM_OF_THREADS];
 
-    text = sf::Text("", font, 24);
-    text.setFillColor(sf::Color::White);
-    text.setOutlineThickness(2);
-    text.setOutlineColor(sf::Color::Black);
-    text.setPosition({ 10, 5 });
-    textcalc = sf::Text("", font, 24);
+			for (int j = 0; j < monitorWidth; j++)
+			{
+				for (int i = 0; i < monitorHeight; i++)
+				{
+					size_t counter = 0;
+					Uint8 r, g, b = 255;
+					vertices[j + i * monitorWidth].position = { (float)j,(float)i };
+					Vector2i points{ j,i };
+					Vector2f coords = win.mapPixelToCoords(points, c.getView());
+					counter = c.countIterations(coords);
+					c.iterationsToRGB(counter, r, g, b);
+					vertices[j + i * monitorWidth].color = { r,g,b };
+				}
+			}
+			now = DISPLAYING;
+			c.loadText(textbox);
 
-    textcalc.setFillColor(sf::Color::White);
-    textcalc.setOutlineThickness(2);
-    textcalc.setOutlineColor(sf::Color::Black);
-    textcalc.setPosition({ 500, 500 });
+		}
 
-    
+		win.clear();
+		win.draw(vertices);
+		win.draw(textbox);
+		win.display();
+		
 
-    
-
-    while (window.isOpen())
-    {
-        
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            {
-                mandle.leftkey();
-            }
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-            {
-                mandle.rightkey();
-            }
-            if (Keyboard::isKeyPressed(Keyboard::A)) {
-                mandle.akey();
-            }
-            if (Keyboard::isKeyPressed(Keyboard::W)) {
-                mandle.wkey();
-            }
-            if (Keyboard::isKeyPressed(Keyboard::S)) {
-                mandle.skey();
-            }
-            if (Keyboard::isKeyPressed(Keyboard::D)) {
-                mandle.dkey();
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Add)) {
-                mandle.pluskey();
-
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Subtract)) {
-                mandle.minuskey();
-            }
-            if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-                window.close();
-            };
-
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.display();
-        window.clear();
-        if (mandle.pullbool() == true) {
-            window.draw(text);
-            window.draw(mandle.recoverarray());
-        }
-
-        if (mandle.pullbool() == true) {
-            auto text_builder = std::ostringstream();
-            text_builder << setw(4) << "Calculating";
-            textcalc.setString(text_builder.str());
-            window.draw(textcalc);
-            window.display();
-
-
-        }
-
-
-        if (mandle.pullbool() == true) {
-           
-            mandle.calcuatevetex();
-            mandle.setboolfalse();
-            window.display();
-            
-        }
-       
-        auto text_builder = std::ostringstream();        
-        text_builder << setw(4) << int(1 / clock.restart().asSeconds()) << " fps\n";
-        text_builder << setw(4) << mandle.pulliter() << " iters\n";
-        text_builder << setprecision(1) << std::scientific << (complex<float>)mandle.pulliter() / mandle.pullcomplexvalue() << '\n';
-        text_builder << "Right Click:zoom" << endl << "Left Click:Unzoom" << endl << " + - for Iteration" << endl << " A W S D Movement";
-        
-        text.setString(text_builder.str());
-        window.draw(mandle.recoverarray());
-        window.draw(text);
-
-
-    }
+	}
+	return 0;
 }
