@@ -1,50 +1,52 @@
-#include <complex.h>
-#include <SFML/Graphics.hpp>
+#ifndef COMPLEXPLANE
+#define COMPLEXPLANE
 
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <ostream>
+#include <cmath>
+#include <vector>
+#include <complex>
+
+using namespace std;
+using namespace sf;
+
+class ComplexPlane {
+
+
+    public:
+    ComplexPlane(float aspectRatio);
+    void zoomIn();
+    void zoomOut();
+    void setCenter(Vector2f coord);
+    View getView();
+    void setMouseLocation(Vector2f coord);
+    void loadText(Text& text);
+    size_t countIterations(Vector2f cord);
+    void iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b);
+
+
+    private:
+
+    Vector2f m_mouselocation;
+
+    View m_view;
+    
+    int m_zoomcount;
+    
+    float m_aspectratio;
+
+
+};
+
+const unsigned int MAX_ITER =64;
 const float BASE_WIDTH = 4.0;
 const float BASE_HEIGHT = 4.0;
+const float BASE_ZOOM =0.5;
 
-class Defineset {
-public:
+enum class windowStatus{CALCULATING, DISPLAYING};
 
-   
 
-    Defineset(unsigned int _xpixels, unsigned int _ypixels);
-    void calcuatevetex();
-    void convertxytocomplex();
-    std::complex<float> pullcomplexvalue();
-    void FindIterationsFromC();
-    void ConvertIterToColor();
-    sf::VertexArray& recoverarray();
-    int returnxpixels();
-    int returnypixels();
-    void wkey();
-    void akey();
-    void skey();
-    void dkey();
-    void leftkey();
-    void rightkey();
-    void pluskey();
-    void minuskey();
-    bool pullbool();
-    void setboolfalse();
-    int pulliter();
-    
 
-private:
-    sf::VertexArray vArray1;
-    sf::VertexArray vArray;
-    sf::Vector2f point;
-    std::complex<float> c;
-    int iter = 0;
-    sf::Color color;
-    sf::VertexArray points;
-    unsigned int xpixels, ypixels;
-    bool calculate = true;
-    float xset = -0.5;
-    float yset = 2.0;
-    int MAX_ITER = 100;
-    float BASE_ZOOM = 0.004;
-    
-    
-};
+
+#endif
