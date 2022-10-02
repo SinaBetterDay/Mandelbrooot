@@ -19,12 +19,12 @@ int main()
 
 	Font font;
 	font.loadFromFile("./fonts/Game Of Squids.ttf");
-	Text textbox("test", font, 15);
-	textbox.setFillColor(sf::Color::White);
-	textbox.setOutlineColor(sf::Color::Black);
-	textbox.setScale(1, 1);
-	textbox.setStyle(sf::Text::Bold);
-	textbox.setPosition(0, 0);
+	Text text("test", font, 15);
+	text.setFillColor(sf::Color::White);
+	text.setOutlineColor(sf::Color::Black);
+	text.setScale(1, 1);
+	text.setStyle(sf::Text::Bold);
+	text.setPosition(0, 0);
 
 	VertexArray vertices(Points, monitorHeight * monitorWidth);
 	enum CurrentState { CALCULATING, DISPLAYING };
@@ -84,13 +84,13 @@ int main()
 			}
 
 			state = DISPLAYING;
-			complex.loadText(textbox);
+			complex.loadText(text);
 
 		}
 
 		window.clear();
 		window.draw(vertices);
-		window.draw(textbox);
+		window.draw(text);
 		window.display();
 		
 	}
