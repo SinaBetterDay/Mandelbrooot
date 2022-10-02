@@ -75,7 +75,6 @@ size_t ComplexPlane::countIterations(Vector2f coord) {
 
 	while (abs(z) < 2 && iter < MAX_ITER)
 	{
-
 		z = z * z + c;
 		iter++;
 	}
@@ -91,14 +90,12 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
         r = 0;
         g = 0;
         b = 0;
-
     }
 
     else if (count > 57) {
         r = 255;
         g = 255 * (0);
         b = 255 * (0);
-
     }
 
     else if (count > 49) {
@@ -112,7 +109,6 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
         r = 255 * (0.75);
         g = 255;
         b = 255 * (0);
-
     }
 
     else if (count > 33)
@@ -120,7 +116,6 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
         r = 255 * (0.5);
         g = 255;
         b = 255 * (0);
-
     }
 
     else if (count > 25)
@@ -128,7 +123,6 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
         r = 255 * (0);
         g = 255;
         b = 255 * (0.5);
-
     }
 
     else if (count > 17)
@@ -136,7 +130,6 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
         r = 255 * (0);
         g = 255 * (0.25);
         b = 255;
-
     }
 
     else if (count > 9)
@@ -144,7 +137,6 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
         r = 255 * (0.33);
         g = 255 * (0);
         b = 255;
-
     }
 
     else
