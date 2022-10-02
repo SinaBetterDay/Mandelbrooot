@@ -43,6 +43,4 @@ const float BASE_ZOOM = 0.5;
 enum class windowStatus { CALCULATING, DISPLAYING };
 
 
-
-
 #endif
