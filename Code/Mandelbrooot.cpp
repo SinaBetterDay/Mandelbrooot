@@ -2,7 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <thread>
+
 using namespace sf;
+using namespace std;
+
 int main()
 {
 	Event event;
@@ -10,12 +13,12 @@ int main()
 	VideoMode monitor = res.getDesktopMode();
 	float monitorWidth = monitor.width;
 	float monitorHeight = monitor.height;
-	float ratio = monitorHeight / monitorWidth;
-	ComplexPlane c(ratio);
-	RenderWindow win(res, "Mandlebroooooooot", Style::Default);
+	float aspectratio = monitorHeight / monitorWidth;
+	ComplexPlane complex(aspectratio);
+	RenderWindow window(res, "Mandlebroooooooot", Style::Default);
 
 	Font font;
-	font.loadFromFile("./font/Game Of Squids.ttf");
+	font.loadFromFile("./fonts/Game Of Squids.ttf");
 	Text textbox("test", font, 15);
 	textbox.setFillColor(sf::Color::White);
 	textbox.setOutlineColor(sf::Color::Black);
@@ -25,34 +28,34 @@ int main()
 
 	VertexArray vertices(Points, monitorHeight * monitorWidth);
 	enum CurrentState { CALCULATING, DISPLAYING };
-	CurrentState now = CALCULATING;
+	CurrentState state = CALCULATING;
 
-	while (win.isOpen())
+	while (window.isOpen())
 	{
-		while (win.pollEvent(event))
+		while (window.pollEvent(event))
 		{
 			if (event.key.code == Keyboard::Escape)
 			{
-				win.close();
+				window.close();
 			}
-			if (event.type == Event::Closed) { win.close(); }
-			if (event.type == sf::Event::MouseButtonPressed)
+			if (event.type == Event::Closed) { window.close(); }
+			if (event.type == Event::MouseButtonPressed)
 			{
 				Vector2f clicked;
-				clicked = win.mapPixelToCoords(Mouse::getPosition(win), c.getView());
+				clicked = window.mapPixelToCoords(Mouse::getPosition(window), complex.getView());
 
-				if (event.mouseButton.button == sf::Mouse::Left) { c.zoomIn(); }
-				if (event.mouseButton.button == sf::Mouse::Right) { c.zoomOut(); }
-				c.setCenter(clicked);
-				now = CALCULATING;
+				if (event.mouseButton.button == Mouse::Left) { complex.zoomIn(); }
+				if (event.mouseButton.button == Mouse::Right) { complex.zoomOut(); }
+				complex.setCenter(clicked);
+				state = CALCULATING;
 			}
 
-			if (event.type == sf::Event::MouseMoved)
+			if (event.type == Event::MouseMoved)
 			{
-				c.setMouseLocation(win.mapPixelToCoords(Mouse::getPosition(win), c.getView()));
+				complex.setMouseLocation(window.mapPixelToCoords(Mouse::getPosition(window), complex.getView()));
 			}
 		}
-		if (now == CALCULATING)
+		if (state == CALCULATING)
 		{
 			const int NUM_OF_THREADS = 16;
 
@@ -68,23 +71,22 @@ int main()
 					Uint8 r, g, b = 255;
 					vertices[j + i * monitorWidth].position = { (float)j,(float)i };
 					Vector2i points{ j,i };
-					Vector2f coords = win.mapPixelToCoords(points, c.getView());
-					counter = c.countIterations(coords);
-					c.iterationsToRGB(counter, r, g, b);
+					Vector2f coords = window.mapPixelToCoords(points, complex.getView());
+					counter = complex.countIterations(coords);
+					complex.iterationsToRGB(counter, r, g, b);
 					vertices[j + i * monitorWidth].color = { r,g,b };
 				}
 			}
-			now = DISPLAYING;
-			c.loadText(textbox);
+			state = DISPLAYING;
+			complex.loadText(textbox);
 
 		}
 
-		win.clear();
-		win.draw(vertices);
-		win.draw(textbox);
-		win.display();
+		window.clear();
+		window.draw(vertices);
+		window.draw(textbox);
+		window.display();
 		
-
 	}
 	return 0;
 }
