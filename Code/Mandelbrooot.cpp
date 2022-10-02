@@ -38,7 +38,12 @@ int main()
 			{
 				window.close();
 			}
-			if (event.type == Event::Closed) { window.close(); }
+
+			if (event.type == Event::Closed) 
+			{ 
+				window.close(); 
+			}
+
 			if (event.type == Event::MouseButtonPressed)
 			{
 				Vector2f clicked;
@@ -59,7 +64,7 @@ int main()
 		{
 			const int NUM_OF_THREADS = 16;
 
-			//multithreading
+			//multithreading??
 			int step = static_cast<int>(monitorWidth) / NUM_OF_THREADS;
 			thread t[NUM_OF_THREADS];
 
@@ -77,6 +82,7 @@ int main()
 					vertices[j + i * monitorWidth].color = { r,g,b };
 				}
 			}
+
 			state = DISPLAYING;
 			complex.loadText(textbox);
 
