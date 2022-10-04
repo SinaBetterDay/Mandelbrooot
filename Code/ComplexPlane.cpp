@@ -56,7 +56,7 @@ void ComplexPlane::loadText(Text& text) {
     Vector2f centerCoord;
     centerCoord = m_view.getCenter();
 
-    //Update text
+    
     stringstream ss;
     ss << "Mandelbroooooot" << endl;
     ss << "Center: (" << centerCoord.x << ", " << centerCoord.y << ")" << endl;
@@ -82,9 +82,10 @@ size_t ComplexPlane::countIterations(Vector2f coord) {
 
 }
 
-//edit function parameters
+
 void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
 
+	
     if (count == MAX_ITER)
     {
         r = 0;
