@@ -20,10 +20,10 @@ int main()
 	Font font;
 	font.loadFromFile("./fonts/Game Of Squids.ttf");
 	Text text("test", font, 15);
-	text.setFillColor(sf::Color::White);
-	text.setOutlineColor(sf::Color::Black);
+	text.setFillColor(Color::White);
+	text.setOutlineColor(Color::Black);
 	text.setScale(1, 1);
-	text.setStyle(sf::Text::Bold);
+	text.setStyle(sText::Bold);
 	text.setPosition(0, 0);
 
 	VertexArray vertices(Points, monitorHeight * monitorWidth);
