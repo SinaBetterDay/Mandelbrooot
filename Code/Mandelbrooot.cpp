@@ -23,7 +23,7 @@ int main()
 	text.setFillColor(Color::White);
 	text.setOutlineColor(Color::Black);
 	text.setScale(1, 1);
-	text.setStyle(sText::Bold);
+	text.setStyle(Text::Bold);
 	text.setPosition(0, 0);
 
 	VertexArray vertices(Points, monitorHeight * monitorWidth);
